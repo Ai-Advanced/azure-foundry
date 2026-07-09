@@ -14,7 +14,7 @@
 > - Azure 구독(Subscription) 및 리소스 그룹 생성 권한
 > - Azure CLI 설치 및 로그인 상태 (`az login`)
 > - 기본적인 클라우드 개념(리전, 리소스 그룹, RBAC)에 대한 이해
-> - JDK 21 및 Maven (실제 코딩은 Ch.3부터 진행하나 환경은 준비되어 있어야 함)
+> - Python 3.11+ 및 `uv` (실제 코딩은 Ch.3부터 진행하나 환경은 준비되어 있어야 함)
 
 ---
 
@@ -98,7 +98,7 @@ Foundry의 핵심 아키텍처는 리소스 관리 모델의 현대화에 있다
 
 ## 4. 핵심 개념 상세 정의
 
-Foundry를 능숙하게 다루기 위해 반드시 완벽히 이해해야 할 핵심 개념들이다. 이 개념들은 이후 자바 SDK를 다룰 때 객체 모델로 그대로 전이된다.
+Foundry를 능숙하게 다루기 위해 반드시 완벽히 이해해야 할 핵심 개념들이다. 이 개념들은 이후 Python SDK를 다룰 때 객체 모델(`AIProjectClient`, `AgentsClient`, `OpenAI` 등)로 그대로 전이된다.
 
 1.  **Foundry Resource (AIServices kind)**: 모든 AI 활동의 기초가 되는 Azure 리소스다. 실제 Azure 리소스 종류(kind)는 `AIServices`로 생성된다. 이는 단순히 OpenAI뿐만 아니라 음성(Speech), 언어(Language), 비전(Vision), 콘텐츠 안전(Content Safety) 기능을 모두 포함하는 거대한 컨테이너다.
 2.  **Project**: 개발팀이 작업하는 논리적 단위다. 프로젝트는 Foundry Resource의 할당량(Quota)을 나누어 쓴다. 예를 들어 하나의 Resource 아래 '고객 상담 봇 프로젝트'와 '내부 문서 요약 프로젝트'를 각각 독립적으로 운영할 수 있다. 프로젝트 간에는 기본적으로 데이터가 격리되지만, Resource를 통해 자원을 공유할 수 있다.
@@ -125,7 +125,7 @@ Foundry를 능숙하게 다루기 위해 반드시 완벽히 이해해야 할 �
 
 여러분이 팀장이라면, 팀원들을 프로젝트에 초대할 때 다음 가이드를 따르라.
 1.  **시니어 개발자 / 아키텍트**: 모델 배포와 인덱싱을 직접 관리해야 하므로 **Foundry Project Manager** 권한이 필요하다.
-2.  **주니어 개발자 / 데이터 분석가**: 배포된 모델을 사용해 자바 코딩을 하거나 Playground에서 프롬프트를 깎는 작업을 한다면 **Foundry User**만으로 충분하다.
+2.  **주니어 개발자 / 데이터 분석가**: 배포된 모델을 사용해 Python 코딩을 하거나 Playground에서 프롬프트를 깎는 작업을 한다면 **Foundry User**만으로 충분하다.
 3.  **애플리케이션(Managed Identity)**: 서버 앱이 배포될 때는 **Cognitive Services OpenAI User**와 **Foundry User** 권한이 조합되어야 한다.
 
 ⚠️ **함정**: Azure 구독의 'Owner' 권한이 있다고 해서 모든 것이 해결되지 않는다. Foundry 포털에서 모델을 배포하거나 데이터를 인덱싱할 때 "Access Denied"가 뜬다면, 본인에게 **'Foundry Project Manager'** 역할이 해당 리소스 혹은 프로젝트 레벨에서 명시적으로 할당되었는지 반드시 확인하라. Azure RBAC는 명시적 할당이 우선이다.
@@ -139,7 +139,7 @@ Foundry의 모델 카탈로그는 단순한 목록이 아니라, 각 모델의 �
 ### 6.1 플래그십 모델 상세 분석
 
 -   **GPT-5.5 (OpenAI)**: 2026년 4월 출시된 현세대 최강 모델이다. 105만 토큰의 거대한 컨텍스트 창을 지원하며, 'Reasoning' 모드를 활성화하면 복잡한 수학 문제나 로직 설계를 인간 전문가 수준으로 수행한다. 특히 **'Computer Use'** 기능을 통해 브라우저를 직접 조작하거나 스크린샷을 분석하여 사무 작업을 자동화하는 에이전트 구축에 최적이다.
--   **Claude 3.5 Sonnet (Anthropic)**: Foundry 내에서 'Inference API'를 통해 즉시 배포 가능하다. 특히 자연스러운 문체와 정교한 코드 작성 능력으로 자바 개발자들 사이에서 인기가 높다. GPT 모델과는 다른 독특한 시각을 제공하여 앙상블 시스템 구축에 유리하며, 감성적인 대화가 필요한 서비스에 추천된다.
+-   **Claude 3.5 Sonnet (Anthropic)**: Foundry 내에서 'Inference API'를 통해 즉시 배포 가능하다. 특히 자연스러운 문체와 정교한 코드 작성 능력으로 Python 개발자들 사이에서도 인기가 높다. GPT 모델과는 다른 독특한 시각을 제공하여 앙상블 시스템 구축에 유리하며, 감성적인 대화가 필요한 서비스에 추천된다.
 -   **Phi-4 (Microsoft)**: 마이크로소프트의 자체 소형 모델(SLM)이다. 성능 대비 전력 소모와 비용이 압도적으로 낮아, 실시간 채팅의 의도 분류(Intent Classification)나 간단한 개체명 인식(NER) 작업에 사용하면 비용을 90% 이상 절감할 수 있다. 소형 장치나 브라우저 내 추론에도 적합한 고효율 모델이다.
 -   **Llama 3.1 / 4.0 (Meta)**: 오픈소스 생태계의 강자다. 특정 도메인(금융, 의료 등)의 전문 용어를 학습시키기 위한 파인튜닝(Fine-tuning) 베이스 모델로 가장 많이 사용된다. Foundry에서는 이를 관리형 인프라 위에서 클릭 몇 번으로 배포할 수 있어 운영 부담이 거의 없다.
 
@@ -170,7 +170,7 @@ Foundry의 모델 카탈로그는 단순한 목록이 아니라, 각 모델의 �
     -   **Resource Group**: `rg-foundry-lab-01`
     -   **Name**: `foundry-res-primary`
     -   **Region**: `East US` (GPT-5.5 가용성 확인)
-5.  **Identity** 탭: **System Assigned Managed Identity**를 반드시 **On**으로 설정하라. 이후 자바 앱에서 키 없이 리소스에 접근할 때 이 설정이 없으면 고생하게 된다. 보안 강화를 위해 권장되는 표준 설정이다.
+5.  **Identity** 탭: **System Assigned Managed Identity**를 반드시 **On**으로 설정하라. 이후 Python 앱에서 `DefaultAzureCredential`로 키 없이 리소스에 접근할 때 이 설정이 없으면 고생하게 된다. 보안 강화를 위해 권장되는 표준 설정이다.
 6.  **Review + Create** 클릭 후 약 2~3분 대기.
 
 #### 단계 2: Foundry Project 생성 (핵심 과정)
@@ -218,10 +218,10 @@ az cognitiveservices account show \
 
 -   **Home**: 최근 작업한 프로젝트와 빠른 시작 튜토리얼을 보여준다. 현재 리소스의 상태, 쿼터 소모 현황, 그리고 MS의 최신 AI 공지사항을 확인하는 통합 대시보드다.
 -   **Models**: 모델을 탐색하고 배포한다. 'Serverless API' 방식으로 배포하면 인프라 관리 없이 호출 횟수만큼만 비용을 낼 수 있다. 수천 개의 모델 중 성능, 비용, 리전 가용성을 따져 최적의 조합을 찾는 곳이다. 배포 전 각 모델의 가격표(Pricing)를 반드시 확인하라.
--   **Agents**: 2026년의 핵심인 **Responses API v2**를 기반으로 지능형 에이전트를 설계한다. 파일 검색, 코드 실행, 웹 검색 등의 도구를 에이전트에게 장착시키는 과정을 GUI로 직관적으로 수행한다. 이곳에서 만든 에이전트 정의(Definition)는 나중에 자바 코드에서 `AgentClient`를 통해 호출된다.
+-   **Agents**: 2026년의 핵심인 **Responses API v2**를 기반으로 지능형 에이전트를 설계한다. 파일 검색, 코드 실행, 웹 검색 등의 도구를 에이전트에게 장착시키는 과정을 GUI로 직관적으로 수행한다. 이곳에서 만든 에이전트 정의(Definition)는 나중에 Python 코드에서 `AgentsClient` (`azure-ai-agents`)를 통해 호출된다.
 -   **Data + Indexes**: RAG 시스템의 기반이 되는 벡터 DB를 구축한다. Azure AI Search와 연동하여 PDF, 마크다운, 워드 문서를 AI가 검색 가능한 '지식베이스'로 변환한다. 데이터 정제와 청킹(Chunking) 전략을 여기서 수립하며, 대규모 인덱싱 시 발생하는 비용을 관리 센터에서 모니터링해야 한다.
 -   **Evaluation**: "내 AI의 답변이 얼마나 신뢰할 수 있는가?"를 검증한다. 'Groundedness'(답변의 근거 유무) 지표는 생성형 AI의 고질적 문제인 환각(Hallucination)을 잡아내는 데 필수적이다. 대량의 테스트 데이터셋을 돌려 모델의 정확도를 수치화하며, 리플레이 기능을 통해 실패한 사례를 분석하고 프롬프트를 개선한다.
--   **Traces**: OpenTelemetry 표준을 사용하여 애플리케이션 로그를 추적한다. 자바(Spring Boot) 앱에서 보낸 요청이 Foundry 내부에서 어떻게 처리되었는지 타임라인으로 보여준다. 병목 지점을 찾거나 에러 원인을 분석할 때 사용하며, 시각화된 호출 트리를 통해 복잡한 AI 워크플로의 성능을 튜닝한다.
+-   **Traces**: OpenTelemetry 표준을 사용하여 애플리케이션 로그를 추적한다. Python(FastAPI 등) 앱에서 보낸 요청이 Foundry 내부에서 어떻게 처리되었는지 타임라인으로 보여준다. `azure-monitor-opentelemetry` 로 자동 계측 가능. 병목 지점을 찾거나 에러 원인을 분석할 때 사용하며, 시각화된 호출 트리를 통해 복잡한 AI 워크플로의 성능을 튜닝한다.
 -   **Management Center**: 현재 사용 중인 모든 프로젝트의 쿼터와 보안 연결을 중앙 관리한다. 사내 AI 거버넌스 담당자가 가장 많이 보게 될 화면이며, 사용하지 않는 배포 모델을 삭제하여 불필요한 비용 지출을 막는 곳이기도 하다.
 -   **Playgrounds**: 'Chat Playground'에서 시스템 프롬프트를 테스트하라. 여기서 성공한 프롬프트는 우측 상단의 'View Code'를 통해 즉시 Java/Python 코드로 추출할 수 있다. 초반 코드 작성 시 훌륭한 뼈대가 되며, 온도(Temperature)나 Top-P 같은 파라미터를 실시간으로 튜닝하며 응답의 품질을 확인해볼 수 있다.
 
@@ -284,7 +284,7 @@ Foundry는 이러한 태그 정보를 모든 하위 프로젝트의 호출 로�
 1.  **Hub Discovery**: 현재 운영 중인 허브 리소스를 식별한다.
 2.  **Resource Conversion**: Azure Portal의 'Foundry Upgrade' 위저드를 사용하여 허브를 Foundry Resource로 변환한다. 이 과정에서 기존의 Project들은 자동으로 Foundry Project로 계층이 재조정된다.
 3.  **Connection Validation**: 변환 후 기존의 Azure AI Search나 OpenAI Connection이 정상적으로 동작하는지 'Connection Test' 도구로 검증한다.
-4.  **SDK Update**: Java SDK 버전을 2.1.0(GA) 이상으로 업데이트하여 새로운 `azure-ai-projects` 패키지를 사용하도록 코드를 수정한다.
+4.  **SDK Update**: Python `azure-ai-projects` 2.3.0(GA) 이상으로 업데이트하여 새로운 `AIProjectClient` API를 사용하도록 코드를 수정한다. Python은 Java보다 feature-complete 상태 (Hosted Agents 등 preview 기능 다수 포함).
 
 ### 10.5 데이터 보안 및 개인정보 보호 (Data Residency)
 
@@ -319,7 +319,7 @@ Foundry를 사용하는 전형적인 개발 흐름은 다음과 같다. 이 흐�
 
 1.  **Exploration**: 모델 카탈로그에서 프로젝트에 적합한 모델을 고른다. 벤치마크 데이터를 확인하며 가성비를 따진다.
 2.  **Prototyping**: Playgrounds에서 시스템 프롬프트를 깎고 도구(Tool)들을 연동해본다. 에이전트 서비스 v2를 통해 로직을 시각화한다.
-3.  **Integration**: 'View Code'를 통해 얻은 설정값으로 자바 백엔드 앱을 작성한다. (Ch.3에서 본격적으로 시작한다)
+3.  **Integration**: 'View Code'를 통해 얻은 설정값으로 Python 백엔드 앱을 작성한다. FastAPI · Flask · Django 등 원하는 프레임워크와 조합. (Ch.3에서 본격적으로 시작한다)
 4.  **Testing & Evaluation**: 실제 사용자의 예상 질문 셋을 돌려보고 성능 지표(Relevance, Coherence 등)를 뽑는다.
 5.  **Deployment**: Global Standard에서 Global Provisioned로 업그레이드하여 실제 서비스에 런칭한다. 리전별 부하를 확인한다.
 6.  **Monitoring**: Traces와 App Insights를 통해 실시간으로 시스템을 감시하고, 이상 징후 발생 시 리플레이 기능을 통해 원인을 분석한다.
@@ -393,7 +393,7 @@ Microsoft Foundry는 단순한 개발 도구를 넘어 기업의 'AI 중추'로 
 -   **Foundry Resource**는 전사 관리 단위, **Project**는 개발팀 작업 단위다. (Resource 생성 후 반드시 Project를 생성하라)
 -   보안의 핵심은 **Managed Identity**와 **RBAC** 설정이다. (API 키 하드코딩은 이제 금기 사항이다)
 -   최신 모델과 넉넉한 쿼터를 위해 **East US** 리전에서 시작하는 것을 추천한다.
--   **Playground**의 'View Code' 기능을 활용하여 초기 자바 코딩의 뼈대를 잡아라.
+-   **Playground**의 'View Code' 기능을 활용하여 초기 Python 코딩의 뼈대를 잡아라 (Python/curl 스니펫 자동 생성).
 -   비용 최적화를 위해 **Global Standard**(개발)와 **Global Batch**(대량 처리)를 적절히 혼용하라.
 -   모든 모델 호출은 **Tracing**을 통해 투명하게 기록되며, 이는 디버깅과 성능 평가의 기초가 된다.
 
