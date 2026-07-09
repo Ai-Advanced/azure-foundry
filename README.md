@@ -91,6 +91,13 @@ Foundry 리소스 만드는 법은 **Ch.1** 참조.
 | 10 | 보안 · 거버넌스 · 비용 (Foundry Control Plane) | [Ch10_Security_Governance.md](Ch10_Security_Governance.md) | ✅ 완료 |
 | 11 | Production CI/CD & LLMOps | [Ch11_LLMOps.md](Ch11_LLMOps.md) | ✅ 완료 |
 
+### 🟣 엔터프라이즈 확장 (Enterprise Extension) — 폐쇄망 · 사내 툴 통합
+
+| Ch | 제목 | 파일 | 상태 |
+|---|---|---|---|
+| 12 | 폐쇄망 근접 배포 · 데이터 주권 · MS 계약 검증 (ZDR / CCC / Private Endpoint) | [Ch12_Enterprise_Deployment.md](Ch12_Enterprise_Deployment.md) | ✅ 완료 |
+| 13 | 사내 툴 통합 Enterprise Agent 실전 (M365 · Teams · Outlook · GitHub · Slack · Custom MCP) | [Ch13_Enterprise_Agent_Integration.md](Ch13_Enterprise_Agent_Integration.md) | ✅ 완료 |
+
 ---
 
 ## 📌 2026 주요 변경 반영 사항
@@ -103,11 +110,14 @@ Foundry 리소스 만드는 법은 **Ch.1** 참조.
 | **Agent API** | Assistants API → **Responses API v2** (Threads/Messages/Runs → Conversations/Items/Responses) | Ch.7, Ch.8 |
 | **리소스 모델** | Hub-based Project (legacy) → **Foundry Project** (권장) | Ch.1 |
 | **모델 카탈로그** | GPT-5.5 (2026-04), **Claude in Foundry** (2026-06), Sora-2, Grok 등 파트너 모델 확장 | Ch.2 |
-| **MCP** | Agent Service의 **MCP 통합 GA** (원격 MCP 서버 + Foundry MCP Server preview) | Ch.5, Ch.7 |
+| **MCP** | Agent Service의 **MCP 통합 GA** (원격 MCP 서버 + Foundry MCP Server preview) | Ch.5, Ch.7, Ch.13 |
 | **배포 유형** | Global Standard / Global Provisioned / Global Batch / Data Zone / Regional / Developer | Ch.2, Ch.8 |
 | **평가·관측** | Continuous Evaluation GA, Trace Replay preview, **AI Red Teaming Agent** preview | Ch.9 |
-| **거버넌스** | **Foundry Control Plane** GA (통합 fleet 관리, 컴플라이언스, Defender/Purview 연동) | Ch.10 |
+| **거버넌스** | **Foundry Control Plane** GA (통합 fleet 관리, 컴플라이언스, Defender/Purview 연동) | Ch.10, Ch.12 |
 | **API 버저닝** | 월별 `api-version` 파라미터 → **`/openai/v1/` stable routes** | Ch.3, Ch.7 |
+| **폐쇄망 배포** | Private Endpoint + VNet Injection + Managed VNet (Allow-only-approved-outbound) 조합 GA | **Ch.12** 🆕 |
+| **사내 툴 통합** | Bot Framework 프록시 · Custom MCP (Java 2.0.0 GA) · MSAL OBO 인증 · Purview DLP inline | **Ch.13** 🆕 |
+| **⚠️ 정정: 유출 보상** | Customer Copyright Commitment는 IP 인덤니티이지 **데이터 유출 보상 아님**. Azure SLA는 uptime only. | **Ch.12** 🆕 |
 
 ---
 
@@ -136,27 +146,43 @@ Ch.1 개요 ─┬─▶ Ch.2 첫 배포 ─▶ Ch.3 API 연동
                                                   │
                                                   ▼
                                      Ch.11 Production CI/CD & LLMOps
+                                                  │
+                    ┌─────────────────────────────┤
+                    │                             │
+                    ▼                             ▼
+       Ch.12 폐쇄망 근접 배포           Ch.13 Enterprise Agent 실전
+       (ZDR · CCC · Private Endpoint)  (M365 · Teams · Outlook · MCP)
+                    └─────────────┬───────────────┘
+                                  │
+                                  ▼
+                        🎯 사내 배포 준비 완료
 ```
 
-- **Ch.1~3**: 여기까지가 최소 실무 진입선. "Foundry에서 GPT-5로 뭐 하나 만들어봐" 라는 요구를 해결할 수 있음.
-- **Ch.4~7**: 여기까지 오면 사내 RAG 챗봇 / Responses API 기반 에이전트 PoC 를 처음부터 끝까지 세울 수 있음.
-- **Ch.8~11**: 여기까지 오면 프로덕션 이관, 다지역/다모델, 평가 파이프라인, IaC + CI/CD 를 책임질 수 있음.
+- **Ch.1~3**: 최소 실무 진입선. "Foundry에서 GPT-5로 뭐 하나 만들어봐" 해결.
+- **Ch.4~7**: 사내 RAG 챗봇 / Responses API v2 에이전트 PoC 완결.
+- **Ch.8~11**: 프로덕션 이관 · 다지역/다모델 · 평가 파이프라인 · IaC + CI/CD.
+- **Ch.12~13 (Enterprise Extension)**: 폐쇄망/제한환경 배포 + 사내 툴(M365/Teams/Outlook/GitHub/Slack/ERP) 통합. **금융권·공공·엔터프라이즈 고객사용**.
 
 ## 진행 상황 (Delivery Checklist)
 
-- [x] Ch.1 — Microsoft Foundry 개요 & 시작 (36.2 KB, 3,032 단어)
-- [x] Ch.2 — 첫 모델 배포와 Playground (16.8 KB, 3,029 단어)
-- [x] Ch.3 — API 연동 기초 (15.7 KB, 3,073 단어)
-- [x] Ch.4 — Prompt Engineering & Structured Outputs (32.0 KB, 3,024 단어)
-- [x] Ch.5 — Function Calling & Tool Use (MCP) (38.5 KB, 4,168 단어)
-- [x] Ch.6 — RAG (Azure AI Search) (33.5 KB, 3,274 단어)
-- [x] Ch.7 — Agent Service (Responses API v2) (35.3 KB, 3,230 단어)
-- [x] Ch.8 — Model Router & 배포 전략 (19.6 KB, 3,042 단어)
-- [x] Ch.9 — Evaluation & Observability (Python 병기) (19.8 KB, 3,025 단어)
-- [x] Ch.10 — Security · Governance · Cost (34.5 KB, 3,606 단어)
-- [x] Ch.11 — Production CI/CD & LLMOps (18.5 KB, 3,200 단어)
+### 코어 커리큘럼 (Ch.1~11)
+- [x] Ch.1 — Microsoft Foundry 개요 & 시작 (40.5 KB)
+- [x] Ch.2 — 첫 모델 배포와 Playground (38.2 KB)
+- [x] Ch.3 — API 연동 기초 (41.2 KB)
+- [x] Ch.4 — Prompt Engineering & Structured Outputs (43.0 KB)
+- [x] Ch.5 — Function Calling & Tool Use (MCP) (57.1 KB)
+- [x] Ch.6 — RAG (Azure AI Search) (33.5 KB)
+- [x] Ch.7 — Agent Service (Responses API v2) (43.1 KB)
+- [x] Ch.8 — Model Router & 배포 전략 (40.1 KB)
+- [x] Ch.9 — Evaluation & Observability (Python 병기) (37.5 KB)
+- [x] Ch.10 — Security · Governance · Cost (34.5 KB)
+- [x] Ch.11 — Production CI/CD & LLMOps (39.8 KB)
 
-**총 340 KB · 약 35,733 단어 (한국어) · 11개 챕터 전량 배포 완료 (2026-07-09)**
+### 엔터프라이즈 확장 (Ch.12~13) 🆕
+- [x] **Ch.12 — 폐쇄망 근접 배포 · 데이터 주권 · MS 계약 검증 (33.0 KB)**
+- [x] **Ch.13 — 사내 툴 통합 Enterprise Agent 실전 (36.3 KB)**
+
+**총 531 KB · 13개 챕터 전량 배포 완료 (2026-07-09 최종, v1.2)**
 
 
 ---
@@ -203,8 +229,9 @@ Ch.1 개요 ─┬─▶ Ch.2 첫 배포 ─▶ Ch.3 API 연동
 
 ## 버전 정보
 
-- 커리큘럼 버전: **v1.1 (배포판)** — Microsoft Foundry 리브랜딩 + Responses API v2 + Java SDK 실제 상태 반영
+- 커리큘럼 버전: **v1.2 (Enterprise Extension 배포판)** — Microsoft Foundry 리브랜딩 + Responses API v2 + Java SDK 실제 상태 + **Ch.12/Ch.13 엔터프라이즈 확장**
 - 기준 시점: **2026-07** (Foundry / Java SDK 최신 GA 반영)
-- 작성 도구: 대화형 AI 오케스트레이션 (Sisyphus-Junior writing 에이전트 병렬 실행 + Oracle 검증)
+- 작성 도구: 대화형 AI 오케스트레이션 (Ch.1-11 librarian + writing 에이전트 병렬, **Ch.12-13 Sisyphus 직접 작성 + 3-축 librarian 검증**)
 - 배포 완료: **2026-07-09**
-- 총 분량: 11개 챕터 · ~267 KB · ~40,000 단어 (한국어)
+- 총 분량: 13개 챕터 · ~529 KB · ~78,000 단어 (한국어)
+- Ch.12-13 리서치 검증: MS Learn official + Product Terms + DPA + Trust Center 원문 인용, "contractually guaranteed" / "best effort" / "marketing claim" 3단계 라벨링
