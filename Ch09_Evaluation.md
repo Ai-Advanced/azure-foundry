@@ -385,7 +385,7 @@ if __name__ == "__main__":
 
 Python 은 `azure-monitor-opentelemetry` 한 줄로 자동 계측.
 
-### 8.1 pom.xml Ch.3 base 에 추가
+### 8.1 pyproject.toml 에 추가 (Ch.3 base)
 
 ```bash
 uv add "azure-monitor-opentelemetry>=1.6"
