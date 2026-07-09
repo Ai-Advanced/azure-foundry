@@ -195,21 +195,23 @@ Ch.1 개요 ─┬─▶ Ch.2 첫 배포 ─▶ Ch.3 API 연동 (Python)
 ## 진행 상황 (Python Version Delivery Checklist)
 
 ### 코어 커리큘럼 (Ch.1~11)
-- [ ] Ch.1 — Microsoft Foundry 개요 & 시작
-- [ ] Ch.2 — 첫 모델 배포와 Playground
-- [ ] Ch.3 — API 연동 기초 (Python)
-- [ ] Ch.4 — Prompt Engineering & Structured Outputs (Pydantic)
-- [ ] Ch.5 — Function Calling & Tool Use (MCP Python)
-- [ ] Ch.6 — RAG (Azure AI Search + LangChain)
-- [ ] Ch.7 — Agent Service (Responses API v2 + Semantic Kernel Python)
-- [ ] Ch.8 — Model Router & 배포 전략
-- [ ] Ch.9 — Evaluation & Observability (Python-native)
-- [ ] Ch.10 — Security · Governance · Cost
-- [ ] Ch.11 — Production CI/CD & LLMOps
+- [x] Ch.1 — Microsoft Foundry 개요 & 시작
+- [x] Ch.2 — 첫 모델 배포와 Playground
+- [x] Ch.3 — API 연동 기초 (Python + uv + openai)
+- [x] Ch.4 — Prompt Engineering & Structured Outputs (Pydantic v2)
+- [x] Ch.5 — Function Calling & Tool Use (MCP Python + FastMCP)
+- [x] Ch.6 — RAG (Azure AI Search + LangChain + LlamaIndex)
+- [x] Ch.7 — Agent Service (Responses API v2 + Semantic Kernel Python)
+- [x] Ch.8 — Model Router & 배포 전략
+- [x] Ch.9 — Evaluation & Observability (**Python-native · 40+ evaluator**)
+- [x] Ch.10 — Security · Governance · Cost
+- [x] Ch.11 — Production CI/CD & LLMOps (uv Docker + GitHub Actions)
 
 ### 엔터프라이즈 확장 (Ch.12~13)
-- [ ] Ch.12 — 폐쇄망 근접 배포 · 데이터 주권 · MS 계약 검증
-- [ ] Ch.13 — 사내 툴 통합 Enterprise Agent 실전 (Python)
+- [x] Ch.12 — 폐쇄망 근접 배포 · 데이터 주권 · MS 계약 검증
+- [x] Ch.13 — 사내 툴 통합 Enterprise Agent 실전 (msal + msgraph + MCP + Bot Framework Python)
+
+**13개 챕터 전량 Python 변환 완료 (2026-07, v2.0)**
 
 ---
 
