@@ -7,6 +7,70 @@
 Microsoft Foundry(구 Azure AI Foundry)를 **처음 만지는 사람부터 프로덕션 배포까지** 이어지는 실무 심화 교재.
 챕터당 5~10페이지, **개념 → 실습 코드 → 함정/베스트 프랙티스** 3단 구조.
 
+## 전체 교육 flow
+
+**첫 모델 호출 → RAG·Agent PoC → 프로덕션 LLMOps → 엔터프라이즈 확장**의 4단계로 구성됩니다.
+실선은 권장 학습 순서이며, 점선은 운영 중 품질 문제가 발견됐을 때 되돌아가는 개선 흐름입니다.
+
+```mermaid
+---
+config:
+  theme: neutral
+  flowchart:
+    wrappingWidth: 320
+---
+flowchart TD
+    subgraph Foundation["Level 1 · 기초 이해 · Ch.1~3"]
+        C1["Ch.1 Foundry 개요 · 리소스 구성"]
+        C2["Ch.2 첫 모델 배포 · Playground"]
+        C3["Ch.3 API 연동<br/>Java · REST"]
+        C1 --> C2 --> C3
+    end
+    subgraph Application["Level 2 · 실무 응용 · Ch.4~7"]
+        C4["Ch.4 Prompt Engineering<br/>Structured Outputs"]
+        C5["Ch.5 Function Calling · MCP"]
+        C6["Ch.6 RAG<br/>Azure AI Search · 사내 문서 검색"]
+        C7["Ch.7 Foundry Agent Service<br/>도구와 지식을 연결한 Agent PoC"]
+        C4 --> C5 --> C6 --> C7
+    end
+    subgraph Production["Level 3 · 프로덕션 · Ch.8~11"]
+        C8["Ch.8 Model Router · 배포 전략"]
+        C9["Ch.9 Evaluation · Observability<br/>평가 데이터 · 품질 · 추적"]
+        C10["Ch.10 보안 · 거버넌스 · 비용"]
+        C11["Ch.11 Production CI/CD · LLMOps<br/>평가 게이트 · 단계적 배포 · 롤백"]
+        C8 --> C9 --> C10 --> C11
+    end
+    subgraph Enterprise["Level 4 · 엔터프라이즈 확장 · Ch.12~13"]
+        C12["Ch.12 제한 환경 배포 · 데이터 주권<br/>Private Endpoint · 계약 검증"]
+        C13["Ch.13 사내 툴 통합 Enterprise Agent<br/>M365 · Teams · GitHub · Custom MCP"]
+        C12 --> C13
+    end
+    Done["엔터프라이즈 AI 서비스 운영<br/>품질 · 보안 · 비용 지속 관리"]
+
+    C3 --> C4
+    C7 --> C8
+    C11 --> C12
+    C13 --> Done
+    C11 -. 평가 실패 시 프롬프트와 검색 개선 .-> C4
+    Done -. 운영 데이터로 재평가 .-> C9
+
+    classDef step fill:#fbf4e7,stroke:#926020,color:#162b46
+    classDef production fill:#eaf5fa,stroke:#096f88,color:#162b46
+    classDef result fill:#eaf6f0,stroke:#15745b,color:#162b46
+    class C1,C2,C3,C4,C5,C6,C7 step
+    class C8,C9,C10,C11 production
+    class C12,C13,Done result
+```
+
+| 학습 구간 | 다음 단계에 전달하는 결과 |
+|---|---|
+| Ch.1~3 | 배포된 모델과 Java·REST API 연동 |
+| Ch.4~7 | 프롬프트·검색·도구를 연결한 RAG 챗봇 또는 Agent PoC |
+| Ch.8~11 | 평가·관측·거버넌스와 CI/CD를 갖춘 프로덕션 운영 체계 |
+| Ch.12~13 | 제한 환경 배포 설계와 사내 시스템 통합 Agent |
+
+챕터별 문서: [커리큘럼](#커리큘럼) · 운영 반복 실습: [Ch.11 Production CI/CD & LLMOps](Ch11_LLMOps.md)
+
 ---
 
 ## 대상 독자
@@ -123,40 +187,8 @@ Foundry 리소스 만드는 법은 **Ch.1** 참조.
 
 ## 챕터 간 연결 (Learning Path)
 
-```
-Ch.1 개요 ─┬─▶ Ch.2 첫 배포 ─▶ Ch.3 API 연동
-           │                        │
-           │                        ▼
-           │              Ch.4 Prompt/Structured
-           │                        │
-           │                        ▼
-           │              Ch.5 Function Calling ──┐
-           │                        │             │
-           │                        ▼             ▼
-           │              Ch.6 RAG ──▶ Ch.7 Agent Service
-           │                                      │
-           │                                      ▼
-           └─────────────────▶ Ch.8 Model Router (배포 전략 종합)
-                                                  │
-                                                  ▼
-                                     Ch.9 Evaluation & Observability
-                                                  │
-                                                  ▼
-                                     Ch.10 Security · Governance · Cost
-                                                  │
-                                                  ▼
-                                     Ch.11 Production CI/CD & LLMOps
-                                                  │
-                    ┌─────────────────────────────┤
-                    │                             │
-                    ▼                             ▼
-       Ch.12 폐쇄망 근접 배포           Ch.13 Enterprise Agent 실전
-       (ZDR · CCC · Private Endpoint)  (M365 · Teams · Outlook · MCP)
-                    └─────────────┬───────────────┘
-                                  │
-                                  ▼
-                        🎯 사내 배포 준비 완료
-```
+전체 흐름은 README 상단의 [전체 교육 flow](#전체-교육-flow)에서 확인할 수 있습니다.
+아래는 학습 구간별 도달 목표입니다. Ch.12~13은 조직의 배포·통합 요구에 맞춰 심화합니다.
 
 - **Ch.1~3**: 최소 실무 진입선. "Foundry에서 GPT-5로 뭐 하나 만들어봐" 해결.
 - **Ch.4~7**: 사내 RAG 챗봇 / Responses API v2 에이전트 PoC 완결.
